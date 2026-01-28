@@ -68,7 +68,7 @@ export function TodoList() {
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           onKeyDown={handleKeyDown}
-          className='flex-1 bg-sky-50'
+          className='flex-1'
         />
         <Button onClick={addTodo} size='icon'>
           <Plus className='h-4 w-4' />
