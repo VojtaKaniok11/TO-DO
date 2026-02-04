@@ -16,15 +16,25 @@ interface Todo {
 
 export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
     const savedTodos = localStorage.getItem('moje-ukoly');
     if (savedTodos) {
-      setTodos(JSON.parse(savedTodos));
+      try {
+        setTodos(JSON.parse(savedTodos));
+      } catch (error) {
+        console.error('Failed to parse todos:', error);
+      }
     }
+    setIsLoaded(true);
   }, []);
+
   useEffect(() => {
-    localStorage.setItem('moje-ukoly', JSON.stringify(todos));
-  }, [todos]);
+    if (isLoaded) {
+      localStorage.setItem('moje-ukoly', JSON.stringify(todos));
+    }
+  }, [todos, isLoaded]);
   const [newTodo, setNewTodo] = useState('');
 
   const addTodo = () => {
@@ -94,11 +104,10 @@ export function TodoList() {
               />
               <label
                 htmlFor={`todo-${todo.id}`}
-                className={`flex-1 cursor-pointer select-none ${
-                  todo.completed
+                className={`flex-1 cursor-pointer select-none ${todo.completed
                     ? 'line-through text-muted-foreground'
                     : 'text-foreground'
-                }`}
+                  }`}
               >
                 {todo.text}
               </label>
